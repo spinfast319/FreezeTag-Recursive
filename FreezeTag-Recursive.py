@@ -33,5 +33,5 @@ for i in directories:
 print(f"Freeze tag ran {COUNT} times.")
 
 """      
-In windows 7 freezetag does not create a .ftag file if certain special characters with non normative encodings are in the directory name and this script doesn't either. Some characters it gracefully skips and other characters it crashes. 
+In windows freezetag does not create a .ftag file if certain special characters with non normative encodings are in the directory name and this script doesn't either. Some characters it gracefully skips and other characters it crashes. 
 """
