@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 # FreezeTag-Recursive
 # author: hypermodified
 # A simple python script that loops through a directory and runs the freezetag command on every directory and subdirectory allowing for the folder and file names and all metadata to be recovered if needed with the unfreeze command.
