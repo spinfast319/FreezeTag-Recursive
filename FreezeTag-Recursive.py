@@ -6,8 +6,7 @@
 
 # Import dependencies
 import os  # Imports functionality that let's you interact with your operating system
-import subprocess  # Imports functionality that let's you run command line commands in a script
-import freezetag  # Imports freezetag
+from freezetag import commands # Imports freezetag
 
 COUNT = 0
 
@@ -19,7 +18,7 @@ def my_function(directory):
     global COUNT
     print("Listing: " + directory)
     print("\t-" + "\n\t-".join(os.listdir(".")))  # List current working directory
-    subprocess.run('freezetag freeze "' + directory + '"')  # Executes the freesetag freeze command on the directory you are in
+    commands.freeze(directory, False, directory) # Executes the freezetag freeze command on the directory you are in
     COUNT += 1  # variable will increment every loop iteration
 
 
