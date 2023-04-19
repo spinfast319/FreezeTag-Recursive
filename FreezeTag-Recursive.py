@@ -5,12 +5,12 @@
 # A simple python script that loops through a directory and runs the freezetag command on every directory and subdirectory allowing for the folder, filenames and metadata to be recovered if changed.
 # It then checks each directory to make sure a .ftag file is there and logs those that are missing.
 # It can handle albums with artwork folders or multiple disc folders in them.
-# It can also handle specials characters and skips and logs any characters that makes windows fail.
+# It can also handle specials characters.
 # It has been tested and works in both Ubuntu Linux and Windows 10.
 
 # Import dependencies
 import os  # Imports functionality that let's you interact with your operating system
-from freezetag import commands # Imports freezetag
+from freezetag import commands  # Imports freezetag
 import datetime  # Imports functionality that lets you make timestamps
 
 #  Set your directories here
@@ -79,12 +79,12 @@ def summary_text():
 #  A function that gets the directory and then runs the freezetag freeze command plus the directory
 def freeze_folder(directory):
     global ftag_create_count
-    
+
     print("")
     print(f"Listing: {directory}")
     print("\t-" + "\n\t-".join(os.listdir(".")))  # List current working directory
     try:
-        commands.freeze(directory, False, directory) # Executes the freezetag freeze command on the directory you are in
+        commands.freeze(directory, False, directory)  # Executes the freezetag freeze command on the directory you are in
         ftag_create_count += 1  # variable will increment every loop iteration
     except:
         pass
@@ -93,22 +93,22 @@ def freeze_folder(directory):
 #  A function to identify and log directories missing ftag files
 def missing_ftag(directory):
     global ftag_missing
-    
+
     print(f"Checking for ftag file in {directory}")
-    
+
     # Reset file_exists variable
     file_exists = False
-    
+
     # Loop through the directory and check if there is a ftag file
     for fname in os.listdir(directory):
         if fname.endswith(".ftag"):
             file_exists = True
-            break     
-        else: 
-            file_exists = False         
+            break
+        else:
+            file_exists = False
 
     if file_exists == True:
-        print("--This directory has an ftag file in it.")   
+        print("--This directory has an ftag file in it.")
     else:
         # list track that was retagged
         missing_ftag_list.append(directory)
@@ -120,15 +120,16 @@ def missing_ftag(directory):
         log_outcomes(directory, log_name, log_message)
         ftag_missing += 1  # variable will increment every loop iteration
 
+
 # The main function that controls the flow of the script
 def main():
     global count
-    
+
     try:
         # intro text
         print("")
         print("In this universe, there's only one absolute. ")
-        
+
         # Get all the subdirectories of album_directory recursively and store them in a list:
         directories = [os.path.abspath(x[0]) for x in os.walk(album_directory)]
         directories.remove(os.path.abspath(album_directory))  # If you don't want your main directory included
@@ -140,25 +141,25 @@ def main():
             os.chdir(i)  # Change working Directory
             freeze_folder(i)  # Run your function
             count += 1  # variable will increment every loop iteration
-            
-        print("")    
-        print("Part 2: Checking for missing freeze files") 
-        print("")         
+
+        print("")
+        print("Part 2: Checking for missing freeze files")
+        print("")
         #  Run a loop that goes into each directory and checks for a freezetag file
         for i in directories:
             os.chdir(i)  # Change working Directory
             missing_ftag(i)  # Run your function
-            
+
         # Print a list of missing directories missing ftag files
         if missing_ftag_list:
             print("")
             print("List of missing directories missing ftag files")
-            for i in (missing_ftag_list):
-                        print(f"--{i}")  
+            for i in missing_ftag_list:
+                print(f"--{i}")
         else:
             print("")
             print("--No folders are missing ftag files.")
-    
+
     finally:
         # Summary text
         print("")
@@ -167,9 +168,6 @@ def main():
         summary_text()
         print("")
 
+
 if __name__ == "__main__":
     main()
-
-"""      
-In windows freezetag does not create a .ftag file if certain special characters with non normative encodings are in the directory name and this script doesn't either. Some characters it gracefully skips and other characters it crashes. 
-"""
