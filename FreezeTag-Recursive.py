@@ -68,7 +68,7 @@ def summary_text():
     print("This script looks for potential missing files or errors. The following messages outline whether any were found.")
 
     error_status = error_exists(ftag_missing)
-    print(f"--{error_status}: There were {ftag_missing} missing freezetag files for {count} folders examined..")
+    print(f"--{error_status}: There were {ftag_missing} missing freezetag files for {count} folders examined.")
 
     if error_message >= 1:
         print("Check the logs to see which folders had errors and what they were.")
@@ -83,8 +83,11 @@ def freeze_folder(directory):
     print("")
     print(f"Listing: {directory}")
     print("\t-" + "\n\t-".join(os.listdir(".")))  # List current working directory
-    commands.freeze(directory, False, directory) # Executes the freezetag freeze command on the directory you are in
-    ftag_create_count += 1  # variable will increment every loop iteration
+    try:
+        commands.freeze(directory, False, directory) # Executes the freezetag freeze command on the directory you are in
+        ftag_create_count += 1  # variable will increment every loop iteration
+    except:
+        pass
 
 
 #  A function to identify and log directories missing ftag files
@@ -115,7 +118,7 @@ def missing_ftag(directory):
         log_name = "bad-missing-ftag"
         log_message = "ftag file is missing from a folder that should have one"
         log_outcomes(directory, log_name, log_message)
-        bad_missing += 1  # variable will increment every loop iteration
+        ftag_missing += 1  # variable will increment every loop iteration
 
 # The main function that controls the flow of the script
 def main():
