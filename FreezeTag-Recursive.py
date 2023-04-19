@@ -58,25 +58,17 @@ def error_exists(error_type):
 # A function that writes a summary of what the script did at the end of the process
 def summary_text():
     global count
-    global total_count
-    global good_missing
-    global bad_missing
-    global parse_error
+    global ftag_create_count
+    global ftag_missing
     global error_message
-    global origin_old
 
     print("")
-    print(f"This script moved {count} albums out of {total_count} folders examined.")
+    print(f"This script created {ftag_create_count} freezetag files for {count} folders examined.")
+    print("")
     print("This script looks for potential missing files or errors. The following messages outline whether any were found.")
 
-    error_status = error_exists(parse_error)
-    print(f"--{error_status}: There were {parse_error} albums skipped due to not being able to open the yaml. Redownload the yaml file.")
-    error_status = error_exists(origin_old)
-    print(f"--{error_status}: There were {origin_old} origin files that do not have the needed metadata and need to be updated.")
-    error_status = error_exists(bad_missing)
-    print(f"--{error_status}: There were {bad_missing} folders missing an origin files that should have had them.")
-    error_status = error_exists(good_missing)
-    print(f"--Info: Some folders didn't have origin files and probably shouldn't have origin files. {good_missing} of these folders were identified.")
+    error_status = error_exists(ftag_missing)
+    print(f"--{error_status}: There were {ftag_missing} missing freezetag files for {count} folders examined..")
 
     if error_message >= 1:
         print("Check the logs to see which folders had errors and what they were.")
@@ -86,13 +78,13 @@ def summary_text():
 
 #  A function that gets the directory and then runs the freezetag freeze command plus the directory
 def freeze_folder(directory):
-    global count
+    global ftag_create_count
     
     print("")
     print(f"Listing: {directory}")
     print("\t-" + "\n\t-".join(os.listdir(".")))  # List current working directory
     commands.freeze(directory, False, directory) # Executes the freezetag freeze command on the directory you are in
-    count += 1  # variable will increment every loop iteration
+    ftag_create_count += 1  # variable will increment every loop iteration
 
 
 # The main function that controls the flow of the script
@@ -114,6 +106,8 @@ def main():
         for i in directories:
             os.chdir(i)  # Change working Directory
             freeze_folder(i)  # Run your function
+            count += 1  # variable will increment every loop iteration
+            
             
         #print("Part 2: Checking for missing freeze files")    
     
@@ -122,7 +116,8 @@ def main():
         print("")
         print("Everything freezes.")
         # run summary text function to provide error messages
-        print(f"Freeze tag ran {count} times.")
+        summary_text()
+        print("")
 
 if __name__ == "__main__":
     main()
